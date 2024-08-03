@@ -1,14 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:riverpod_todo_app/models/todo_model.dart';
 import 'package:riverpod_todo_app/providers/all_providers.dart';
 
 class TodoListItemWidget extends ConsumerStatefulWidget {
   const TodoListItemWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   ConsumerState<TodoListItemWidget> createState() => _TodoListItemWidgetState();

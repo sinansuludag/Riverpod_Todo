@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:riverpod_todo_app/models/todo_model.dart';
 import 'package:riverpod_todo_app/providers/all_providers.dart';
 import 'package:riverpod_todo_app/widgets/title_widget.dart';
 import 'package:riverpod_todo_app/widgets/todo_list_item_widget.dart';
 import 'package:riverpod_todo_app/widgets/toolbar_widget.dart';
-import 'package:uuid/uuid.dart';
 
 class TodoApp extends ConsumerWidget {
   TodoApp({super.key});
@@ -14,7 +12,7 @@ class TodoApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var _allList = ref.watch(filteredTodoListProvider);
+    var allList = ref.watch(filteredTodoListProvider);
     return SafeArea(
       child: Scaffold(
         body: ListView(
@@ -22,35 +20,44 @@ class TodoApp extends ConsumerWidget {
             horizontal: 0.03.sw,
           ),
           children: [
-            TitleWidget(),
+            const TitleWidget(),
             TextField(
               controller: newController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "Bugün neler yapacaksın?",
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red)),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black)),
               ),
               onSubmitted: (description) {
-                ref
-                    .read(todoListProvider.notifier)
-                    .addTodo(description: description);
-                newController.text = "";
+                if (description.isNotEmpty) {
+                  ref
+                      .read(todoListProvider.notifier)
+                      .addTodo(description: description);
+                  newController.text = "";
+                }
               },
             ),
             SizedBox(
               height: 5.h,
             ),
-            ToolBarWidget(),
-            for (var i = 0; i < _allList.length; i++)
+            const ToolBarWidget(),
+            for (var i = 0; i < allList.length; i++)
               Dismissible(
-                  key: ValueKey(_allList[i].id),
+                  background: Center(
+                    child: Text("Siliniyor"),
+                  ),
+                  key: ValueKey(allList[i].id),
                   onDismissed: (_) {
-                    ref.read(todoListProvider.notifier).remove(_allList[i]);
+                    ref.read(todoListProvider.notifier).remove(allList[i]);
                   },
-                  //Burada ilk başta currenTodoProvider bir hata donduroyor eger bir değer atanmazsa.Biz değeri burda atıyoruz
+                  //Burada ilk başta currenTodoProvider bir hata donduruyor eger bir değer atanmazsa.Biz değeri burda atıyoruz
                   //ve hata fırlatmasını engelliyoruz.Nasıl yapıyoruz? TodoListItemWidget widgetini ProviderScopla sarıp ProviderScopun
                   //overrideWithValue metodundan yararlanıp fırlatılan hatayı override edip uygun değeri alıp gonderiyoruz.
                   child: ProviderScope(overrides: [
-                    currentTodoProvider.overrideWithValue(_allList[i])
-                  ], child: TodoListItemWidget()))
+                    currentTodoProvider.overrideWithValue(allList[i])
+                  ], child: const TodoListItemWidget()))
           ],
         ),
       ),

@@ -38,6 +38,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   uuid: ^4.4.2
   flutter_riverpod: ^2.5.1
+  riverpod: ^2.5.1
 
 dev_dependencies:
   flutter_test:

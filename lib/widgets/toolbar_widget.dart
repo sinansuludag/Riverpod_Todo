@@ -9,19 +9,25 @@ class ToolBarWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final unCompletedTodoCount = ref.watch(unCompletedTodoCountProvider);
     final filter = ref.watch(todoListFilterProvider);
+
+    // Enum türündeki filtreye göre renk döndüren fonksiyon
+    Color currentTool(TodoListFilter listFilter) {
+      return filter == listFilter ? Colors.red : Colors.black;
+    }
+
     return Row(
-      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           flex: 2,
           child: Text(
-            unCompletedTodoCount.toString() + ' görev kaldı',
+            '$unCompletedTodoCount görev kaldı',
             overflow: TextOverflow.ellipsis,
           ),
         ),
         _buildToolTip(
-            message: "tüm görevler",
+            message: "Tüm görevler",
             title: "Tümü",
+            color: currentTool(TodoListFilter.all),
             func: () {
               ref.read(todoListFilterProvider.notifier).state =
                   TodoListFilter.all;
@@ -29,6 +35,7 @@ class ToolBarWidget extends ConsumerWidget {
         _buildToolTip(
             message: "Tamamlanmamış görevler",
             title: "Aktif",
+            color: currentTool(TodoListFilter.active),
             func: () {
               ref.read(todoListFilterProvider.notifier).state =
                   TodoListFilter.active;
@@ -36,6 +43,7 @@ class ToolBarWidget extends ConsumerWidget {
         _buildToolTip(
             message: "Tamamlanmış görevler",
             title: "Tamamlanmış",
+            color: currentTool(TodoListFilter.completed),
             func: () {
               ref.read(todoListFilterProvider.notifier).state =
                   TodoListFilter.completed;
@@ -44,15 +52,22 @@ class ToolBarWidget extends ConsumerWidget {
     );
   }
 
-  Tooltip _buildToolTip(
-      {required String message,
-      required String title,
-      required VoidCallback func}) {
+  Tooltip _buildToolTip({
+    required String message,
+    required String title,
+    required Color color,
+    required VoidCallback func,
+  }) {
     return Tooltip(
       message: message,
       child: TextButton(
         onPressed: func,
-        child: Text(title),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: color,
+          ),
+        ),
       ),
     );
   }

@@ -6,7 +6,8 @@ class TodoListManager extends StateNotifier<List<TodoModel>> {
   TodoListManager([List<TodoModel>? initialTodos]) : super(initialTodos ?? []);
 
   void addTodo({required String description}) {
-    var eklenecekTodo = TodoModel(id: Uuid().v4(), description: description);
+    var eklenecekTodo =
+        TodoModel(id: const Uuid().v4(), description: description);
     state = [...state, eklenecekTodo];
   }
 

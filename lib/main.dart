@@ -9,11 +9,11 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(
-    ScreenUtilInit(
+    const ScreenUtilInit(
       designSize: Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: ProviderScope(child: const MyApp()),
+      child: ProviderScope(child: MyApp()),
     ),
   );
 }
